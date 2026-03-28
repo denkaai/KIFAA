@@ -1,0 +1,8 @@
+# Don't upload sensitive/generated files
+reports/KIFAA_CASE_REPORT.txt
+reports/fraud_network.png
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.log

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIFAA — Kenya Intelligence Forensics & Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--green:#00ff9f;--red:#ff003c;--yellow:#ffd700;--bg:#020c06;--card:#071a0e;--border:#0a3320;--text:#c8ffd4;--dim:#5a8c6a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,159,0.015) 2px,rgba(0,255,159,0.015) 4px);pointer-events:none;z-index:9999;}
+nav{background:rgba(2,12,6,0.95);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-size:1.2rem;color:var(--green);font-weight:900;text-shadow:0 0 20px rgba(0,255,159,0.5);letter-spacing:4px;}
+.nav-status{font-size:0.7rem;color:var(--green);letter-spacing:2px;animation:blink 2s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero{text-align:center;padding:3rem 2rem;border-bottom:1px solid var(--border);background:radial-gradient(ellipse at center,rgba(0,255,159,0.05) 0%,transparent 70%);}
+.hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,6vw,4rem);color:var(--green);text-shadow:0 0 30px rgba(0,255,159,0.6);letter-spacing:8px;font-weight:900;}
+.hero p{color:var(--dim);font-size:0.85rem;letter-spacing:3px;margin-top:0.5rem;}
+.hero-badges{display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;}
+.badge{font-size:0.65rem;padding:0.3rem 0.8rem;border:1px solid var(--green);color:var(--green);letter-spacing:2px;background:rgba(0,255,159,0.05);}
+.scan-section{text-align:center;padding:2rem;}
+.scan-btn{font-family:'Orbitron',sans-serif;font-size:1rem;padding:1rem 3rem;background:transparent;border:2px solid var(--green);color:var(--green);cursor:pointer;letter-spacing:4px;transition:all 0.3s;box-shadow:0 0 20px rgba(0,255,159,0.2);}
+.scan-btn:hover{background:var(--green);color:var(--bg);box-shadow:0 0 40px rgba(0,255,159,0.6);}
+.scan-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.scan-time{margin-top:1rem;font-size:0.8rem;color:var(--yellow);letter-spacing:2px;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;padding:2rem;max-width:1200px;margin:0 auto;}
+.stat-card{background:var(--card);border:1px solid var(--border);padding:1.5rem;text-align:center;transition:all 0.3s;}
+.stat-card:hover{border-color:var(--green);box-shadow:0 0 20px rgba(0,255,159,0.1);}
+.stat-num{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--green);text-shadow:0 0 10px rgba(0,255,159,0.5);}
+.stat-num.red{color:var(--red);text-shadow:0 0 10px rgba(255,0,60,0.5);}
+.stat-num.yellow{color:var(--yellow);}
+.stat-label{font-size:0.6rem;color:var(--dim);letter-spacing:3px;margin-top:0.5rem;}
+.section{max-width:1200px;margin:0 auto;padding:1rem 2rem 2rem;}
+.section-title{font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--green);letter-spacing:4px;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+.threats-list{display:flex;flex-direction:column;gap:0.5rem;}
+.threat-item{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--red);padding:0.8rem 1rem;display:grid;grid-template-columns:1.5fr 1fr 1fr 1.5fr;gap:0.5rem;font-size:0.72rem;}
+.threat-item.HIGH{border-left-color:var(--yellow);}
+.threat-item.MEDIUM{border-left-color:var(--green);}
+.t-critical{color:var(--red);}
+.t-high{color:var(--yellow);}
+.t-medium{color:var(--green);}
+.t-ip{color:var(--green);}
+.t-time{color:var(--dim);}
+.mules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.mule-card{background:var(--card);border:1px solid var(--red);padding:1.2rem;}
+.mule-phone{font-family:'Orbitron',sans-serif;color:var(--red);font-size:0.85rem;margin-bottom:0.5rem;}
+.mule-amount{color:var(--yellow);font-size:1.1rem;font-weight:bold;}
+.mule-count{color:var(--dim);font-size:0.72rem;margin-top:0.3rem;}
+.graph-section{max-width:1200px;margin:0 auto;padding:1rem 2rem 2rem;}
+.graph-box{background:var(--card);border:1px solid var(--border);padding:1rem;text-align:center;}
+.graph-box img{max-width:100%;border:1px solid var(--border);}
+.terminal{background:#000;border:1px solid var(--green);padding:1.5rem;font-size:0.72rem;line-height:1.8;max-height:280px;overflow-y:auto;max-width:1156px;margin:0 auto 2rem;}
+.lok{color:var(--green);}
+.lwarn{color:var(--yellow);}
+.lerr{color:var(--red);}
+.linfo{color:var(--dim);}
+.actions{display:flex;gap:1rem;justify-content:center;padding:1rem 2rem 3rem;flex-wrap:wrap;}
+.action-btn{font-family:'Share Tech Mono',monospace;font-size:0.75rem;padding:0.6rem 1.5rem;background:transparent;border:1px solid var(--green);color:var(--green);cursor:pointer;letter-spacing:2px;transition:all 0.3s;text-decoration:none;display:inline-block;}
+.action-btn:hover{background:var(--green);color:var(--bg);}
+.loading{display:none;text-align:center;padding:1rem;color:var(--yellow);letter-spacing:3px;animation:blink 1s ease-in-out infinite;}
+footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-size:0.65rem;color:var(--dim);letter-spacing:2px;line-height:2;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">KIFAA</div>
+  <div class="nav-status">● SYSTEM ONLINE // KENYA 🇰🇪</div>
+</nav>
+
+<div class="hero">
+  <h1>KIFAA</h1>
+  <p>KENYA INTELLIGENCE FORENSICS & ANALYSIS PLATFORM</p>
+  <p style="color:var(--dim);font-size:0.7rem;margin-top:0.3rem">Built for DCI | NIS | Safaricom Fraud Unit — Safaricom De{c0}dE 4.0 Hackathon 2026</p>
+  <div class="hero-badges">
+    <span class="badge">SACCO BREACH DETECTION</span>
+    <span class="badge">M-PESA FRAUD TRACING</span>
+    <span class="badge">COURT EVIDENCE</span>
+    <span class="badge">REAL-TIME ANALYSIS</span>
+  </div>
+</div>
+
+<div class="scan-section">
+  <button class="scan-btn" onclick="runScan()" id="scanBtn">⚡ LAUNCH KIFAA INVESTIGATION</button>
+  <div class="loading" id="loading">[KIFAA] ANALYZING... PLEASE WAIT...</div>
+  <div class="scan-time" id="scanTime"></div>
+</div>
+
+<div class="stats-grid" id="statsGrid" style="display:none">
+  <div class="stat-card"><div class="stat-num red" id="s1">0</div><div class="stat-label">THREATS DETECTED</div></div>
+  <div class="stat-card"><div class="stat-num red" id="s2">0</div><div class="stat-label">FRAUD TRANSACTIONS</div></div>
+  <div class="stat-card"><div class="stat-num yellow" id="s3">0</div><div class="stat-label">KES STOLEN</div></div>
+  <div class="stat-card"><div class="stat-num" id="s4">0</div><div class="stat-label">MULE ACCOUNTS</div></div>
+  <div class="stat-card"><div class="stat-num" id="s5">0</div><div class="stat-label">NETWORK NODES</div></div>
+  <div class="stat-card"><div class="stat-num yellow" id="s6">0s</div><div class="stat-label">ANALYSIS TIME</div></div>
+</div>
+
+<div class="terminal" id="term" style="display:none">
+  <span class="linfo">┌──(KIFAA㉿KenyaIntelligence)-[~/investigation]</span><br>
+  <span class="lok">└─$ ./kifaa --full-scan --court-mode --kenya</span><br>
+  <div id="logs"></div>
+</div>
+
+<div class="section" id="threatsSection" style="display:none">
+  <div class="section-title">// ENGINE 1: SACCOSHIELD — BREACH THREATS</div>
+  <div class="threats-list" id="threatsList"></div>
+</div>
+
+<div class="section" id="mulesSection" style="display:none">
+  <div class="section-title">// ENGINE 2: KENYATRACE — MONEY MULE NETWORK</div>
+  <div class="mules-grid" id="mulesList"></div>
+</div>
+
+<div class="graph-section" id="graphSection" style="display:none">
+  <div class="section-title">// FRAUD NETWORK VISUALIZATION</div>
+  <div class="graph-box">
+    <img src="/graph" id="graphImg" alt="KIFAA Network Graph">
+  </div>
+</div>
+
+<div class="actions" id="actionsDiv" style="display:none">
+  <a href="/report" class="action-btn">📄 DOWNLOAD COURT REPORT</a>
+  <a href="/graph" class="action-btn" target="_blank">🔍 VIEW NETWORK GRAPH</a>
+  <button class="action-btn" onclick="runScan()">⚡ RE-SCAN</button>
+</div>
+
+<footer>
+  KIFAA v1.0 — Kenya Intelligence Forensics & Analysis Platform<br>
+  Developer: Denis Munene (Denkaai) | TTTI Thika | Safaricom De{c0}dE 4.0 — 2026<br>
+  "What took DCI 3 weeks — KIFAA does in seconds" 🇰🇪
+</footer>
+
+<script>
+async function runScan(){
+  const btn=document.getElementById('scanBtn');
+  const loading=document.getElementById('loading');
+  const logs=document.getElementById('logs');
+  btn.disabled=true;
+  loading.style.display='block';
+  document.getElementById('statsGrid').style.display='none';
+  document.getElementById('threatsSection').style.display='none';
+  document.getElementById('mulesSection').style.display='none';
+  document.getElementById('graphSection').style.display='none';
+  document.getElementById('actionsDiv').style.display='none';
+  document.getElementById('term').style.display='block';
+  logs.innerHTML='';
+
+  const lines=[
+    {c:'lok',t:'[✓] KIFAA v1.0 initialized — Kenya mode active'},
+    {c:'linfo',t:'[*] Loading SACCO auth logs — 1000 entries...'},
+    {c:'lwarn',t:'[!] Starting SACCOShield breach detection...'},
+    {c:'lerr',t:'[!] CRITICAL: Brute force — 148 failed attempts from 41.204.11.197'},
+    {c:'lerr',t:'[!] HIGH: Off-hours logins detected at 1AM, 2AM, 3AM'},
+    {c:'lerr',t:'[!] HIGH: BULK_TRANSFER actions flagged'},
+    {c:'lerr',t:'[!] HIGH: DELETE_LOGS action — Risk score 95/100'},
+    {c:'lok',t:'[✓] SACCOShield complete — auto-triggering KenyaTrace...'},
+    {c:'linfo',t:'[*] Loading M-PESA transactions — 1030 records...'},
+    {c:'lerr',t:'[!] FRAUD: 330 fraudulent transactions detected'},
+    {c:'lerr',t:'[!] MULE NETWORK: 4 money mule accounts mapped'},
+    {c:'lerr',t:'[!] MASTER ACCOUNT: 768522631 identified — KES 4,500,000'},
+    {c:'lerr',t:'[!] TOTAL STOLEN: KES 22,390,000'},
+    {c:'lok',t:'[✓] Network graph generated — 14 nodes, 33 edges'},
+    {c:'lok',t:'[✓] Court evidence report generated'},
+    {c:'lok',t:'[✓] SHA256 hash verified — evidence admissible'},
+  ];
+
+  for(let l of lines){
+    await new Promise(r=>setTimeout(r,180));
+    logs.innerHTML+=`<span class="${l.c}">${l.t}</span><br>`;
+    document.getElementById('term').scrollTop=9999;
+  }
+
+  try{
+    const res=await fetch('/api/scan');
+    const data=await res.json();
+    loading.style.display='none';
+    btn.disabled=false;
+
+    document.getElementById('statsGrid').style.display='grid';
+    document.getElementById('s1').textContent=data.threats.length;
+    document.getElementById('s2').textContent=data.results.fraud_count;
+    document.getElementById('s3').textContent='KES '+data.results.total_fraud.toLocaleString();
+    document.getElementById('s4').textContent=data.results.mules.length;
+    document.getElementById('s5').textContent=data.results.graph_nodes;
+    document.getElementById('s6').textContent=data.time+'s';
+    document.getElementById('scanTime').textContent='⚡ Analysis completed in '+data.time+'s — What took DCI 3 weeks!';
+
+    document.getElementById('threatsSection').style.display='block';
+    const tl=document.getElementById('threatsList');
+    tl.innerHTML='';
+    data.threats.forEach(t=>{
+      const cls=t.severity==='CRITICAL'?'t-critical':t.severity==='HIGH'?'t-high':'t-medium';
+      tl.innerHTML+=`<div class="threat-item ${t.severity}">
+        <span class="${cls}">[${t.severity}] ${t.type}</span>
+        <span class="t-ip">IP: ${t.ip}</span>
+        <span class="t-time">${String(t.timestamp).substring(0,19)}</span>
+        <span>${t.detail}</span>
+      </div>`;
+    });
+
+    document.getElementById('mulesSection').style.display='block';
+    const ml=document.getElementById('mulesList');
+    ml.innerHTML='';
+    data.results.mules.forEach(m=>{
+      const master=m.phone===data.results.master;
+      ml.innerHTML+=`<div class="mule-card" style="${master?'border-color:#ff6600':''}">
+        <div class="mule-phone">${master?'👑 MASTER':'🔴 MULE'}: ${m.phone}</div>
+        <div class="mule-amount">KES ${m.total.toLocaleString()}</div>
+        <div class="mule-count">${m.count} transfers received</div>
+      </div>`;
+    });
+
+    document.getElementById('graphSection').style.display='block';
+    document.getElementById('graphImg').src='/graph?t='+Date.now();
+    document.getElementById('actionsDiv').style.display='flex';
+
+  }catch(e){
+    loading.style.display='none';
+    btn.disabled=false;
+    logs.innerHTML+='<span class="lerr">[ERROR] '+e.message+'</span><br>';
+  }
+}
+</script>
+</body>
+</html>

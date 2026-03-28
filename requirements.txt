@@ -1,0 +1,7 @@
+flask
+pandas
+networkx
+matplotlib
+reportlab
+faker
+colorama
